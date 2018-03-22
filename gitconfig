@@ -1,0 +1,17 @@
+[push]
+	default = current
+[core]
+	editor = vim
+	excludesFile = /Users/stilljm/.config/git/ignore
+[alias]
+	root = !pwd
+	co = checkout
+	st = status -s
+	last = log -1 HEAD --stat -c
+	hist = log --no-merges --pretty='%C(yellow)%h%d %Creset%an %Cgreen%ar:%Creset %s' --graph
+	rpo = remote prune origin
+	unstage = reset HEAD --
+	untrack = checkout --
+[user]
+	name = John Still
+	email = john.m.still@vumc.org
