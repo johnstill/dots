@@ -15,3 +15,5 @@
 [user]
 	name = John Still
 	email = john.m.still@vumc.org
+
+# vim: ft=gitconfig noexpandtab
