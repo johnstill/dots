@@ -1,0 +1,4 @@
+zsh/*
+nvim/*
+!zsh/zshrc
+!nvim/init.vim
