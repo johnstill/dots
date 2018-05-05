@@ -2,3 +2,5 @@ zsh/*
 nvim/*
 !zsh/zshrc
 !nvim/init.vim
+!nvim/autoload
+!nvim/after

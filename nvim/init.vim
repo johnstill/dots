@@ -1,22 +1,15 @@
-" Version 2.0 - minimalism
+" Version 2.0 - nvim minimalism
+
+" Plugins
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/badwolf'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'elzr/vim-json',  { 'for': 'json' }
 call plug#end()
 
-filetype plugin on
 colorscheme badwolf
 
-inoremap jk <Esc>
-
-set omnifunc=syntaxcomplete#Complete
-
-set backspace=indent,eol,start
-
 set listchars=eol:¬,tab:▸\ ,trail:∙
-nnoremap <space>iv :set list!<cr>
-
-set tabstop=8
 set softtabstop=4
 set shiftwidth=4
 set expandtab
@@ -24,12 +17,13 @@ set shiftround
 
 set splitright
 set splitbelow
+set mouse=a
 
-set wildmode=longest:full,full
-
-if has('mouse')
-    set mouse=a
-endif
+inoremap jk <Esc>
+nnoremap <space>iv :set list!<cr>
+xnoremap < <gv
+xnoremap > >gv
+tnoremap <ESC> <C-\><C-n>
 
 augroup basics
     autocmd!
@@ -40,4 +34,8 @@ augroup basics
     \ if line("'\"") >= 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
+
+    " Treat web technologies has being 2-space indents by default
+    autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css} 
+    \ setlocal softtabstop=2 shiftwidth=2 nowrap
 augroup END
