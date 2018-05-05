@@ -81,7 +81,7 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' stagedstr      '%{%F{green}%B%}●%{%b%f%}'  # %c
 zstyle ':vcs_info:*' unstagedstr    '%{%F{yellow}%B%}●%{%b%f%}' # %u
-zstyle ':vcs_info:git*+set-message:*' hooks git-untracked       # Adds to %u
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked       # Adds to %u and %c
 +vi-git-untracked(){
     if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
         git status --porcelain | grep '??' &> /dev/null ; then
@@ -94,18 +94,17 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked       # Adds to %u
         hook_com[unstaged]="$untrackedFmt"
     fi
     local -a gitstatus
-    local ahead="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+    local  ahead="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
     local behind="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
-    # ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
-    echo "ahead: $ahead"
-    (( $ahead )) && gitstatus+=( "+${ahead}" )
-    # behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
-    echo "behind: $behind"
-    (( $behind )) && gitstatus+=( "-${behind}" )
-    hook_com[misc]+=$gitstatus
+    ((  $ahead )) && gitstatus+=( "%F{magenta}A${ahead}%f" )
+    (( $behind )) && gitstatus+=( "%F{cyan}B${behind}%f" )
+    if [ ${#gitstatus[@]} -ne 0 ]; then;
+        # echo "[${(j:/:)gitstatus}]"
+        hook_com[staged]+="[${(j:/:)gitstatus}]"
+    fi
 }
 zstyle ':vcs_info:*' patch-format   '%10>…>%p%<< (%n applied)'  # %m
-zstyle ':vcs_info:*' formats        '%u%c[%m][%F{cyan}%r%f•%B%F{white}%b%f%%b]'
+zstyle ':vcs_info:*' formats        '%u%c[%F{cyan}%r%f•%B%F{white}%b%f%%b]'
 zstyle ':vcs_info:*' actionformats  '%u%c[%B%F{magenta}%a%f%%b•%F{white}%m%f]'
 
 autoload -Uz vcs_info
