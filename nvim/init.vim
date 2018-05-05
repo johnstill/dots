@@ -18,12 +18,19 @@ set shiftround
 
 set splitright
 set splitbelow
+
 set mouse=a
+set iskeyword+=-
+set showbreak=↪
+set linebreak
+set breakindent
 
 nnoremap <space>iv :set list!<cr>
 xnoremap < <gv
 xnoremap > >gv
 tnoremap <ESC> <C-\><C-n>
+
+cabbrev h vert h
 
 augroup basics
     autocmd!
@@ -34,7 +41,6 @@ augroup basics
     \ if line("'\"") >= 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
-
     " Treat web technologies has being 2-space indents by default
     autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css}
     \ setlocal softtabstop=2 shiftwidth=2 nowrap

@@ -1,7 +1,8 @@
 # Version 2.0 - minimalism
-# Assume installed (via brew): nvim, coreutils 
-
+# Assume installed (via brew): nvim, coreutils
+#########  BASICS  ############################################################
 export EDITOR=nvim
+
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
@@ -14,42 +15,22 @@ mkdir -p $XDG_CONFIG_HOME       \
          $ZDOTDIR               \
          $NVIMDIR
 
-setopt prompt_subst
-setopt hash_list_all
-setopt completeinword
-setopt menu_complete
-
-zstyle :compinstall filename "$ZDOTDIR/zshrc"
-
-autoload -Uz compinit
-compinit
-
-autoload -Uz promptinit
-promptinit
-
-autoload -Uz colors 
-colors
+zmodload -i zsh/parameter
+zmodload -i zsh/complist
+zmodload -i zsh/deltochar
+zmodload -i zsh/mathfunc
+autoload -Uz colors && colors
+setopt auto_pushd
+setopt extendedglob
+setopt noglobdots
 
 # virtualenvwrapper
 export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 source /usr/local/bin/virtualenvwrapper.sh
 
-# Dotfile editing / sourcing
-alias vv="$EDITOR $NVIMDIR/init.vim"
-alias zv="$EDITOR $ZDOTDIR/zshrc"
-alias sv="source $ZDOTDIR/zshrc"
-
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
-
-# Coreutils aliases (brew installed specific)
-alias ls="gls -hF --color=auto --group-directories-first "
-alias la="ls -la "
-alias ll="ls -l "
-alias grep="grep --color=auto "
-
-# Man Page Stylin
 export MANWIDTH=160
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;31m'
@@ -59,53 +40,77 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-# History
+fpath=( $ZDOTDIR/zfunctions "${fpath[@]}" )
+autoload -Uz $(ls $ZDOTDIR/zfunctions)
+
+#########  HISTORY  ###########################################################
+autoload -Uz history-beginning-search-menu
+zle -N history-beginning-search-menu
 HISTSIZE=5000
-HISTFILE=$ZDOTDIR/.zsh_history
 SAVEHIST=5000
-setopt appendhistory
-setopt sharehistory
-setopt incappendhistory
+HISTFILE=$ZDOTDIR/.zsh_history
+setopt share_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
 
-# Keybindings & Edit Modes
-bindkey -v                                                      # Use vi-mode
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey 'jk' vi-cmd-mode
-bindkey '^[[A'  history-beginning-search-backward               # <UP>
-bindkey '^[[B'  history-beginning-search-forward                # <DOWN>
-bindkey '^R'	history-incremental-pattern-search-backward     # <C-R>
-
-zmodload -i zsh/parameter
-zmodload -i zsh/complist
-zmodload -i zsh/deltochar
-zmodload -i zsh/mathfunc
-
-# Completion Configuration
+#########  COMPLETION  ########################################################
+setopt hash_list_all
+setopt completeinword
+setopt menu_complete
+zstyle :compinstall filename "$ZDOTDIR/zshrc"
+autoload -Uz compinit && compinit
 zstyle ':completion:*'                      menu select=5
 zstyle ':completion:*:default'              list-colors ${(s.:.)LS_COLORS}
 
-# Completion keybindings
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -M menuselect '^[[Z' reverse-menu-complete              # Shift Tab (BackTab)
-bindkey -M menuselect '+' accept-and-menu-complete              # <Plus>
-
-# Main Prompt
+#########  MAIN PROMPT  #######################################################
+setopt prompt_subst
+autoload -Uz promptinit && promptinit
 PS1='%(?..[%F{red}%?%f])'           # If the last command had a non-zero status, display it
 PS1+='%B%F{cyan}%n%f%b'             # username
 PS1+="@"                            # *nix traditions...
 PS1+='%B%F{white}%m%f%b '           # hostname
-PS1+='%F{cyan}%20<..<%~%<<%f '      # the CWD truncated to 20 chars
-PS1+='[%!]'                         # Current history event number
+PS1+='%F{cyan}%20<..<%~%<<%f'       # the CWD truncated to 20 chars
 PS1+='${VIMODE}'                    # ZLE's current edit mode
 
 PS2='\`%_> '                        # secondary prompt, printed when the shell needs more information to complete a command.
 PS3='?# '                           # selection prompt used within a select loop.
 PS4='+%N:%i:%_> '                   # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+
+# Append other backends to this list if needed
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr      '%{%F{green}%B%}●%{%b%f%}'  # %c
+zstyle ':vcs_info:*' unstagedstr    '%{%F{yellow}%B%}●%{%b%f%}' # %u
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked       # Adds to %u
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep '??' &> /dev/null ; then
+        # This will show the marker if there are any untracked files in repo.
+        # If instead you want to show the marker only if there are untracked
+        # files in $PWD, use:
+        #[[ -n $(git ls-files --others --exclude-standard) ]] ; then
+        local untrackedFmt='%{%F{red}%B%}●%{%b%f%}'
+        untrackedFmt+=${hook_com[unstaged]}
+        hook_com[unstaged]="$untrackedFmt"
+    fi
+    local -a gitstatus
+    local ahead="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+    local behind="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
+    # ahead=$(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l)
+    echo "ahead: $ahead"
+    (( $ahead )) && gitstatus+=( "+${ahead}" )
+    # behind=$(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l)
+    echo "behind: $behind"
+    (( $behind )) && gitstatus+=( "-${behind}" )
+    hook_com[misc]+=$gitstatus
+}
+zstyle ':vcs_info:*' patch-format   '%10>…>%p%<< (%n applied)'  # %m
+zstyle ':vcs_info:*' formats        '%u%c[%m][%F{cyan}%r%f•%B%F{white}%b%f%%b]'
+zstyle ':vcs_info:*' actionformats  '%u%c[%B%F{magenta}%a%f%%b•%F{white}%m%f]'
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+RPS1='${vcs_info_msg_0_}'
 
 # '$' for normal insert mode
 # a big red 'I' for command mode - to me this is 'NOT insert' because red
@@ -118,6 +123,47 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+#########  ALIASES  ###########################################################
+alias vv="$EDITOR $NVIMDIR/init.vim"
+alias zv="$EDITOR $ZDOTDIR/zshrc"
+alias sv="source $ZDOTDIR/zshrc"
+
+# Coreutils aliases (brew installed specific)
+alias ls="gls -hF --color=auto --group-directories-first "
+alias la="ls -la "
+alias ll="ls -l "
+
 # Other convenience aliases
+alias grep="grep --color=auto "
+
 alias gst="git status"
 alias gbv="git branch -vv"
+alias gd="git diff"
+alias cdg='cd $(git rev-parse --show-toplevel)'
+
+#########  KEYBINDINGS  #######################################################
+bindkey -v
+bindkey '^A'    beginning-of-line
+bindkey '^E'    end-of-line
+bindkey '^?'    backward-delete-char
+bindkey '^h'    backward-delete-char
+bindkey '^w'    backward-kill-word
+
+# History keybindings
+bindkey '^[[A'  history-beginning-search-backward
+bindkey '^[[B'  history-beginning-search-forward
+bindkey '^R'	history-incremental-pattern-search-backward
+bindkey '^X^X'  history-beginning-search-menu
+bindkey '^P'    up-history
+bindkey '^N'    down-history
+
+# Completion keybindings
+bindkey -M menuselect 'h'       vi-backward-char
+bindkey -M menuselect 'k'       vi-up-line-or-history
+bindkey -M menuselect 'l'       vi-forward-char
+bindkey -M menuselect 'j'       vi-down-line-or-history
+bindkey -M menuselect '^[[Z'    reverse-menu-complete
+bindkey -M menuselect '+'       accept-and-menu-complete
+
+# C-[ lags a bit before changing modes, this changes that
+export KEYTIMEOUT=1
