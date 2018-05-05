@@ -5,6 +5,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/badwolf'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'elzr/vim-json',  { 'for': 'json' }
+Plug 'pangloss/vim-javascript'
 call plug#end()
 
 colorscheme badwolf
@@ -36,6 +37,15 @@ augroup basics
     \ endif
 
     " Treat web technologies has being 2-space indents by default
-    autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css} 
+    autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css}
     \ setlocal softtabstop=2 shiftwidth=2 nowrap
+
+    " Automatically trim trailing whitespace from every kind of file except
+    " whats in the filetype blacklist
+    autocmd BufWritePre *
+    \ if index(["markdown"], &filetype) < 0 |
+    \   call utils#TrimWhiteSpace() |
+    \ endif
 augroup END
+
+command! TrimWhiteSpace call utils#TrimWhiteSpace()
