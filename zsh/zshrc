@@ -72,7 +72,7 @@ zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 zstyle ':completion:*:history-words' remove-all-dups yes
 zstyle ':completion:*:history-words' stop yes
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=5
@@ -107,7 +107,10 @@ zstyle ':completion:*:complete:*' cache-path "$XDG_CACHE_HOME"
 zstyle ':completion:*:*:vim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
 zstyle ':completion:*:*:nvim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
 
+# TODO: the completion widget bundled with pip is far from ideal but currently
+# it doesn't look like much else is well maintained.  Potentially write my own?
 eval "`pip completion --zsh`"
+compctl -K _pip_completion pip3
 
 #########  PROMPTS  ###########################################################
 setopt prompt_subst
