@@ -20,7 +20,6 @@ set splitright
 set splitbelow
 set mouse=a
 
-inoremap jk <Esc>
 nnoremap <space>iv :set list!<cr>
 xnoremap < <gv
 xnoremap > >gv
@@ -39,7 +38,11 @@ augroup basics
     " Treat web technologies has being 2-space indents by default
     autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css}
     \ setlocal softtabstop=2 shiftwidth=2 nowrap
+augroup END
 
+augroup trimws
+    autocmd!
+    " Disable this by running `:autocmd! trimws`
     " Automatically trim trailing whitespace from every kind of file except
     " whats in the filetype blacklist
     autocmd BufWritePre *
