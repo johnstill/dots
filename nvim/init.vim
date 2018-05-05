@@ -20,7 +20,6 @@ set splitright
 set splitbelow
 
 set mouse=a
-set iskeyword+=-
 set showbreak=↪
 set linebreak
 set breakindent
