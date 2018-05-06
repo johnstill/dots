@@ -58,8 +58,8 @@ augroup basics
     \   exe "normal! g`\"" |
     \ endif
     " Treat web technologies has being 2-space indents by default
-    autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css}
-    \ setlocal softtabstop=2 shiftwidth=2 nowrap
+    autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css,json}
+    \ setlocal softtabstop=2 shiftwidth=2 textwidth=0
 augroup END
 
 augroup trimws
