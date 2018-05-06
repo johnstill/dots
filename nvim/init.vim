@@ -1,14 +1,26 @@
 " Version 2.0 - nvim minimalism
-
 " Plugins
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/badwolf'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'romainl/Apprentice'
+
 Plug 'editorconfig/editorconfig-vim'
-Plug 'elzr/vim-json',  { 'for': 'json' }
+Plug 'tpope/vim-fugitive'
+
+Plug 'elzr/vim-json',  {'for': 'json'}
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
 call plug#end()
 
-colorscheme badwolf
+augroup recolor
+    autocmd!
+    " Default apprentice is slightly too washed out for my taste, but I LOVE
+    " the emphasis on blue-green
+    autocmd ColorScheme * highlight Normal ctermbg=NONE
+augroup END
+
+colorscheme apprentice
 
 set listchars=eol:¬,tab:▸\ ,trail:∙
 set softtabstop=4
@@ -32,7 +44,9 @@ xnoremap < <gv
 xnoremap > >gv
 tnoremap <ESC> <C-\><C-n>
 
-cabbrev h vert h
+" NetRW settings
+" Quick Command Reference: `vert h netrw-browse-maps`
+let g:netrw_sizestyle='H'   " use human readable, base 1024
 
 augroup basics
     autocmd!
@@ -59,5 +73,6 @@ augroup trimws
     \ endif
 augroup END
 
+command! SyntaxItem echo utils#SyntaxItem()
 command! TrimWhiteSpace call utils#TrimWhiteSpace()
 command! TreeView call utils#ProjectTreeView()

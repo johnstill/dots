@@ -14,6 +14,6 @@ function! utils#ProjectTreeView() abort
     set nosplitright
     35vnew
     setlocal nobuflisted buftype=nofile bufhidden=wipe noswapfile
-    call termopen('tree -CFa -I ".git"')
+    call termopen('tree -CFa -I ".git|node_modules|lib" --dirsfirst')
     let &splitright = oldspr
 endfunction
