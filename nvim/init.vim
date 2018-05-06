@@ -24,6 +24,9 @@ set showbreak=↪
 set linebreak
 set breakindent
 
+" don't force writing buffer before dropping it
+set hidden
+
 nnoremap <space>iv :set list!<cr>
 xnoremap < <gv
 xnoremap > >gv
@@ -57,3 +60,4 @@ augroup trimws
 augroup END
 
 command! TrimWhiteSpace call utils#TrimWhiteSpace()
+command! TreeView call utils#ProjectTreeView()
