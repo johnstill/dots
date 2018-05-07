@@ -1,7 +1,8 @@
 # Version 2.0 - minimalism
-# Assume installed (via brew): nvim, coreutils 
-
+# Assume installed (via brew): nvim, coreutils
+#########  BASICS  ############################################################
 export EDITOR=nvim
+
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
@@ -14,42 +15,22 @@ mkdir -p $XDG_CONFIG_HOME       \
          $ZDOTDIR               \
          $NVIMDIR
 
-setopt prompt_subst
-setopt hash_list_all
-setopt completeinword
-setopt menu_complete
-
-zstyle :compinstall filename "$ZDOTDIR/zshrc"
-
-autoload -Uz compinit
-compinit
-
-autoload -Uz promptinit
-promptinit
-
-autoload -Uz colors 
-colors
+zmodload -i zsh/parameter
+zmodload -i zsh/complist
+zmodload -i zsh/deltochar
+zmodload -i zsh/mathfunc
+autoload -Uz colors && colors
+setopt auto_pushd
+setopt extendedglob
+setopt noglobdots
 
 # virtualenvwrapper
 export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 source /usr/local/bin/virtualenvwrapper.sh
 
-# Dotfile editing / sourcing
-alias vv="$EDITOR $NVIMDIR/init.vim"
-alias zv="$EDITOR $ZDOTDIR/zshrc"
-alias sv="source $ZDOTDIR/zshrc"
-
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
-
-# Coreutils aliases (brew installed specific)
-alias ls="gls -hF --color=auto --group-directories-first "
-alias la="ls -la "
-alias ll="ls -l "
-alias grep="grep --color=auto "
-
-# Man Page Stylin
 export MANWIDTH=160
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;31m'
@@ -59,54 +40,87 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
-# History
+fpath=( $ZDOTDIR/zfunctions "${fpath[@]}" )
+autoload -Uz $(ls $ZDOTDIR/zfunctions)
+
+#########  HISTORY  ###########################################################
+autoload -Uz history-beginning-search-menu
+zle -N history-beginning-search-menu
 HISTSIZE=5000
-HISTFILE=$ZDOTDIR/.zsh_history
 SAVEHIST=5000
-setopt appendhistory
-setopt sharehistory
-setopt incappendhistory
+HISTFILE=$ZDOTDIR/.zsh_history
+setopt share_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
 
-# Keybindings & Edit Modes
-bindkey -v                                                      # Use vi-mode
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey 'jk' vi-cmd-mode
-bindkey '^[[A'  history-beginning-search-backward               # <UP>
-bindkey '^[[B'  history-beginning-search-forward                # <DOWN>
-bindkey '^R'	history-incremental-pattern-search-backward     # <C-R>
+#########  COMPLETION  ########################################################
+setopt hash_list_all
+setopt completeinword
+setopt menu_complete
+zstyle :compinstall filename "$ZDOTDIR/zshrc"
+autoload -Uz compinit && compinit
 
-zmodload -i zsh/parameter
-zmodload -i zsh/complist
-zmodload -i zsh/deltochar
-zmodload -i zsh/mathfunc
+zstyle ':completion:*:approximate:' max-errors 'reply=( $((($#PREFIX+$#SUFFIX)/3 )) numeric )'
+zstyle ':completion:*:correct:*' insert-unambiguous true
+zstyle ':completion:*:corrections' format $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}'
+zstyle ':completion:*:correct:*' original true
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:descriptions' format $'%{\e[0;31m%}completing %B%d%b%{\e[0m%}'
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+zstyle ':completion:*:expand:*' tag-order all-expansions
+zstyle ':completion:*:history-words' list false
+zstyle ':completion:*:history-words' menu yes
+zstyle ':completion:*:history-words' remove-all-dups yes
+zstyle ':completion:*:history-words' stop yes
+zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=5
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:processes' command 'ps -au$USER'
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:-command-:*:' verbose false
+zstyle ':completion:*:warnings' format $'%{\e[0;31m%}No matches for:%{\e[0m%} %d'
+zstyle ':completion:*:*:zcompile:*' ignored-patterns '(*~|*.zwc)'
+zstyle ':completion:correct:' prompt 'correct to: %e'
+zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'
+zstyle ':completion:*:processes-names' command 'ps c -u ${USER} -o command | uniq'
+zstyle ':completion:*:manuals' separate-sections true
+zstyle ':completion:*:manuals.*' insert-sections true
+zstyle ':completion:*:man:*' menu yes select
 
-# Completion Configuration
-zstyle ':completion:*'                      menu select=5
-zstyle ':completion:*:default'              list-colors ${(s.:.)LS_COLORS}
+# Search path for sudo completion
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
+                                            /usr/local/bin  \
+                                            /usr/sbin       \
+                                            /usr/bin        \
+                                            /sbin           \
+                                            /bin            \
+                                            /usr/X11R6/bin
 
-# Completion keybindings
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -M menuselect '^[[Z' reverse-menu-complete              # Shift Tab (BackTab)
-bindkey -M menuselect '+' accept-and-menu-complete              # <Plus>
+zstyle ':completion:*' special-dirs ..
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*:complete:*' cache-path "$XDG_CACHE_HOME"
+zstyle ':completion:*:*:vim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
+zstyle ':completion:*:*:nvim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
 
-# Main Prompt
+# TODO: the completion widget bundled with pip is far from ideal but currently
+# it doesn't look like much else is well maintained.  Potentially write my own?
+eval "`pip completion --zsh`"
+compctl -K _pip_completion pip3
+
+#########  PROMPTS  ###########################################################
+setopt prompt_subst
+autoload -Uz promptinit && promptinit
 PS1='%(?..[%F{red}%?%f])'           # If the last command had a non-zero status, display it
 PS1+='%B%F{cyan}%n%f%b'             # username
 PS1+="@"                            # *nix traditions...
 PS1+='%B%F{white}%m%f%b '           # hostname
-PS1+='%F{cyan}%20<..<%~%<<%f '      # the CWD truncated to 20 chars
-PS1+='[%!]'                         # Current history event number
+PS1+='%F{cyan}%20<..<%~%<<%f'       # the CWD truncated to 20 chars
 PS1+='${VIMODE}'                    # ZLE's current edit mode
-
-PS2='\`%_> '                        # secondary prompt, printed when the shell needs more information to complete a command.
-PS3='?# '                           # selection prompt used within a select loop.
-PS4='+%N:%i:%_> '                   # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
-
 # '$' for normal insert mode
 # a big red 'I' for command mode - to me this is 'NOT insert' because red
 function zle-line-init zle-keymap-select {
@@ -118,6 +132,86 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+PS2='\`%_> '                        # secondary prompt, printed when the shell needs more information to complete a command.
+PS3='?# '                           # selection prompt used within a select loop.
+PS4='+%N:%i:%_> '                   # the execution trace prompt (setopt xtrace). default: '+%N:%i>'
+
+# Append other backends to this list if needed
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' stagedstr      '%{%F{green}%B%}●%{%b%f%}'  # %c
+zstyle ':vcs_info:*' unstagedstr    '%{%F{yellow}%B%}●%{%b%f%}' # %u
+zstyle ':vcs_info:git*+set-message:*' hooks git-untracked       # Adds to %u and %c
++vi-git-untracked(){
+    if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && \
+        git status --porcelain | grep '??' &> /dev/null ; then
+        # This will show the marker if there are any untracked files in repo.
+        # If instead you want to show the marker only if there are untracked
+        # files in $PWD, use:
+        #[[ -n $(git ls-files --others --exclude-standard) ]] ; then
+        local untrackedFmt='%{%F{red}%B%}●%{%b%f%}'
+        untrackedFmt+=${hook_com[unstaged]}
+        hook_com[unstaged]="$untrackedFmt"
+    fi
+    local -a gitstatus
+    local  ahead="$(git log --oneline @{u}.. 2> /dev/null | wc -l | tr -d ' ')"
+    local behind="$(git log --oneline ..@{u} 2> /dev/null | wc -l | tr -d ' ')"
+    ((  $ahead )) && gitstatus+=( "%F{magenta}A${ahead}%f" )
+    (( $behind )) && gitstatus+=( "%F{cyan}B${behind}%f" )
+    if [ ${#gitstatus[@]} -ne 0 ]; then;
+        # echo "[${(j:/:)gitstatus}]"
+        hook_com[staged]+="[${(j:/:)gitstatus}]"
+    fi
+}
+zstyle ':vcs_info:*' patch-format   '%10>…>%p%<< (%n applied)'  # %m
+zstyle ':vcs_info:*' formats        '%u%c[%F{cyan}%r%f•%B%F{white}%b%f%%b]'
+zstyle ':vcs_info:*' actionformats  '%u%c[%B%F{magenta}%a%f%%b•%F{white}%m%f]'
+
+autoload -Uz vcs_info
+precmd() { vcs_info }
+RPS1='${vcs_info_msg_0_}'
+
+#########  ALIASES  ###########################################################
+alias vv="$EDITOR $NVIMDIR/init.vim"
+alias zv="$EDITOR $ZDOTDIR/zshrc"
+alias sv="source $ZDOTDIR/zshrc"
+
+# Coreutils aliases (brew installed specific)
+alias ls="gls -hF --color=auto --group-directories-first "
+alias la="ls -la "
+alias ll="ls -l "
+
 # Other convenience aliases
+alias grep="grep --color=auto "
+
 alias gst="git status"
 alias gbv="git branch -vv"
+alias gd="git diff"
+alias cdg='cd $(git rev-parse --show-toplevel)'
+
+#########  KEYBINDINGS  #######################################################
+bindkey -v
+bindkey '^A'    beginning-of-line
+bindkey '^E'    end-of-line
+bindkey '^?'    backward-delete-char
+bindkey '^h'    backward-delete-char
+bindkey '^w'    backward-kill-word
+
+# History keybindings
+bindkey '^[[A'  history-beginning-search-backward
+bindkey '^[[B'  history-beginning-search-forward
+bindkey '^R'	history-incremental-pattern-search-backward
+bindkey '^X^X'  history-beginning-search-menu
+bindkey '^P'    up-history
+bindkey '^N'    down-history
+
+# Completion keybindings
+bindkey -M menuselect 'h'       vi-backward-char
+bindkey -M menuselect 'k'       vi-up-line-or-history
+bindkey -M menuselect 'l'       vi-forward-char
+bindkey -M menuselect 'j'       vi-down-line-or-history
+bindkey -M menuselect '^[[Z'    reverse-menu-complete
+bindkey -M menuselect '+'       accept-and-menu-complete
+
+# C-[ lags a bit before changing modes, this changes that
+export KEYTIMEOUT=1
