@@ -21,6 +21,7 @@ zmodload -i zsh/complist
 zmodload -i zsh/deltochar
 zmodload -i zsh/mathfunc
 autoload -Uz colors && colors
+autoload -U zmv
 setopt auto_pushd
 setopt extendedglob
 setopt noglobdots
@@ -113,6 +114,31 @@ zstyle ':completion:*:*:nvim:*' file-patterns '^(*.py(c|o)|__pycache__):source-f
 eval "`pip completion --zsh`"
 compctl -K _pip_completion pip3
 
+# If the current word is the first in the words array, rehash (this empties the
+# command hash table, which forces zsh to start finding commands from scratch -
+# i.e., this will help zsh find new commands)
+function _force_rehash () {
+    (( CURRENT == 1 )) && rehash
+    return 1
+}
+
+# the -e flag allows completion function code to appear as the argument to this style
+# This uses the three ZLE widget special parameters HISTNO, BUFFER, and CURSOR
+# to determine if the command line has changed in between completion attempts.
+# If it has _not_, then the more expensive completers (_correct, _approximate)
+# are called.  Additionally we supply a custom _force_rehash completer.
+zstyle -e ':completion:*' completer '
+    if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]] ; then
+        _last_try="$HISTNO$BUFFER$CURSOR"
+        reply=(_complete _match _ignored _prefix _files)
+    else
+        if [[ $words[1] == (rm|mv) ]] ; then
+            reply=(_complete _files)
+        else
+            reply=(_oldlist _expand _force_rehash _complete _ignored _correct _approximate _files)
+        fi
+    fi'
+
 #########  PROMPTS  ###########################################################
 setopt prompt_subst
 autoload -Uz promptinit && promptinit
@@ -120,7 +146,7 @@ PS1='%(?..[%F{red}%?%f])'           # If the last command had a non-zero status,
 PS1+='%B%F{cyan}%n%f%b'             # username
 PS1+="@"                            # *nix traditions...
 PS1+='%B%F{white}%m%f%b '           # hostname
-PS1+='%F{cyan}%20<..<%~%<<%f'       # the CWD truncated to 20 chars
+PS1+='%F{cyan}%20<..<%~%<<%f '      # the CWD truncated to 20 chars
 PS1+='${VIMODE}'                    # ZLE's current edit mode
 # '$' for normal insert mode
 # a big red 'I' for command mode - to me this is 'NOT insert' because red
