@@ -1,6 +1,7 @@
 # Version 2.0 - minimalism
 # Assume installed (via brew): nvim, coreutils
 #########  BASICS  ############################################################
+export VISUAL=nvim
 export EDITOR=nvim
 
 export XDG_CONFIG_HOME=$HOME/.config
