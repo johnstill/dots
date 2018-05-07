@@ -25,6 +25,7 @@ autoload -U zmv
 setopt auto_pushd
 setopt extendedglob
 setopt noglobdots
+setopt correct
 
 # virtualenvwrapper
 export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
@@ -215,6 +216,8 @@ alias gst="git status"
 alias gbv="git branch -vv"
 alias gd="git diff"
 alias cdg='cd $(git rev-parse --show-toplevel)'
+
+alias ngedit="nvim -O -c 'winc l | set ft=xml | winc h' *{ts,html,css}~*spec*"
 
 #########  KEYBINDINGS  #######################################################
 bindkey -v
