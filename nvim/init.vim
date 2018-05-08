@@ -22,6 +22,16 @@ augroup END
 
 colorscheme apprentice
 
+" These are needed to correctly setup python provider support even when I'm
+" working inside of a virtual environment.  Use virtualenv (or whatever) to
+" create these two virtual environments, install neovim into each one, and
+" then never touch them again.
+let s:ROOT_DIR=fnamemodify(expand("$MYVIMRC"), ":p:h")
+let g:python_host_prog=s:ROOT_DIR . '/.env/bin/python'
+let g:python3_host_prog=s:ROOT_DIR . '/.env3/bin/python'
+
+" A number of options I used to have set are now set by default with nvim.
+" See nvim-defaults
 set listchars=eol:¬,tab:▸\ ,trail:∙
 set softtabstop=4
 set shiftwidth=4
@@ -36,7 +46,7 @@ set showbreak=↪
 set linebreak
 set breakindent
 
-" don't force writing buffer before dropping it
+" don't force writing buffer before hiding it
 set hidden
 
 nnoremap <space>iv :set list!<cr>
