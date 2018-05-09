@@ -215,6 +215,7 @@ alias grep="grep --color=auto "
 alias gst="git status"
 alias gbv="git branch -vv"
 alias gd="git diff"
+alias gdc="git diff --cached"
 alias cdg='cd $(git rev-parse --show-toplevel)'
 
 alias ngedit="nvim -O -c 'winc l | set ft=xml | winc h' *{ts,html,css}~*spec*"

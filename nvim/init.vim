@@ -22,6 +22,9 @@ augroup END
 
 colorscheme apprentice
 
+" Syntax highlight python embedded in vimscript
+let g:vimsyn_embed='P'
+
 " These are needed to correctly setup python provider support even when I'm
 " working inside of a virtual environment.  Use virtualenv (or whatever) to
 " create these two virtual environments, install neovim into each one, and
@@ -31,7 +34,7 @@ let g:python_host_prog=s:ROOT_DIR . '/.env/bin/python'
 let g:python3_host_prog=s:ROOT_DIR . '/.env3/bin/python'
 
 " A number of options I used to have set are now set by default with nvim.
-" See nvim-defaults
+" `:h nvim-defaults`
 set listchars=eol:¬,tab:▸\ ,trail:∙
 set softtabstop=4
 set shiftwidth=4
@@ -55,8 +58,11 @@ xnoremap > >gv
 tnoremap <ESC> <C-\><C-n>
 
 " NetRW settings
-" Quick Command Reference: `vert h netrw-browse-maps`
+" Quick Command Reference: `:h netrw-browse-maps`
 let g:netrw_sizestyle='H'   " use human readable, base 1024
+" Use 'a' to toggle hiding / showing these patterns. Unfortunately,
+" netrw_gitignore#Hide never generates correct patterns :/
+let g:netrw_list_hide='__pycache__,.*\.py[co],.*\.so'
 
 augroup basics
     autocmd!
@@ -86,3 +92,5 @@ augroup END
 command! SyntaxItem echo utils#SyntaxItem()
 command! TrimWhiteSpace call utils#TrimWhiteSpace()
 command! TreeView call utils#ProjectTreeView()
+command! Evimrc :vsplit $MYVIMRC
+command! Svimrc :source $MYVIMRC
