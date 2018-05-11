@@ -8,9 +8,12 @@ Plug 'romainl/Apprentice'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-fugitive'
 
-Plug 'elzr/vim-json',  {'for': 'json'}
+Plug 'elzr/vim-json'
+Plug 'mxw/vim-jsx'
+Plug 'ervandew/sgmlendtag'
+
 Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 
 augroup recolor
