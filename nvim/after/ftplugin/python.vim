@@ -10,3 +10,5 @@ let s:prog = join([
 
 let s:paths = system('python -c "'.s:prog.'"')
 let &path='.,,'.s:paths
+
+set textwidth=79

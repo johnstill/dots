@@ -7,13 +7,25 @@ Plug 'romainl/Apprentice'
 
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
+Plug 'junegunn/fzf.vim'
+Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
+Plug 'Konfekt/FoldText'
+" TODO: is this needed with Neovim (or at all?)
+" Plug 'Konfekt/FastFold'
 
 Plug 'elzr/vim-json'
 Plug 'mxw/vim-jsx'
 Plug 'ervandew/sgmlendtag'
-
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+
+" This python syntax file is actually up to date and maintained - the official
+" one hasn't been updated in two years :(
+Plug 'vim-python/python-syntax'
+" Other python utilities
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'tmhedberg/SimpylFold'
 call plug#end()
 
 augroup recolor
@@ -28,6 +40,16 @@ colorscheme apprentice
 " Syntax highlight python embedded in vimscript
 let g:vimsyn_embed='P'
 
+" Enable all python highlighting options specified in the syntax file
+let g:python_highlight_all=1
+" Minimal (but correct) folding: too many folds are more hindrance than help
+let g:SimpylFold_fold_import=0
+" Folds are off by default; but toggle with `zi`
+set nofoldenable
+
+" Tags and tagbar
+let g:tagbar_show_visibility=0
+
 " These are needed to correctly setup python provider support even when I'm
 " working inside of a virtual environment.  Use virtualenv (or whatever) to
 " create these two virtual environments, install neovim into each one, and
@@ -37,7 +59,7 @@ let g:python_host_prog=s:ROOT_DIR . '/.env/bin/python'
 let g:python3_host_prog=s:ROOT_DIR . '/.env3/bin/python'
 
 " A number of options I used to have set are now set by default with nvim.
-" `:h nvim-defaults`
+" Ref: `:h nvim-defaults`
 set listchars=eol:¬,tab:▸\ ,trail:∙
 set softtabstop=4
 set shiftwidth=4
@@ -55,9 +77,12 @@ set breakindent
 " don't force writing buffer before hiding it
 set hidden
 
+" Adapted From: http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
+" Highlight cword or cWORD w/out changing cursor; these are kind of meh
+nnoremap gh :let @/=\V'\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+nnoremap gH :let @/=\V'\<<C-R>=expand("<cWORD>")<CR>\>'<CR>:set hls<CR>
+
 nnoremap <space>iv :set list!<cr>
-xnoremap < <gv
-xnoremap > >gv
 tnoremap <ESC> <C-\><C-n>
 
 " NetRW settings
