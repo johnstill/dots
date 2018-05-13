@@ -11,12 +11,12 @@ Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'Konfekt/FoldText'
-" TODO: is this needed with Neovim (or at all?)
-" Plug 'Konfekt/FastFold'
+" Plug 'Konfekt/FastFold' TODO: is this needed with Neovim (or at all?)
+Plug 'haya14busa/vim-asterisk'
 
+Plug 'ervandew/sgmlendtag'
 Plug 'elzr/vim-json'
 Plug 'mxw/vim-jsx'
-Plug 'ervandew/sgmlendtag'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 
@@ -77,10 +77,11 @@ set breakindent
 " don't force writing buffer before hiding it
 set hidden
 
-" Adapted From: http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
-" Highlight cword or cWORD w/out changing cursor; these are kind of meh
-nnoremap gh :let @/=\V'\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
-nnoremap gH :let @/=\V'\<<C-R>=expand("<cWORD>")<CR>\>'<CR>:set hls<CR>
+let g:asterisk#keeppos = 1
+map *  <Plug>(asterisk-z*)
+map #  <Plug>(asterisk-z#)
+map g* <Plug>(asterisk-gz*)
+map g# <Plug>(asterisk-gz#)
 
 nnoremap <space>iv :set list!<cr>
 tnoremap <ESC> <C-\><C-n>
