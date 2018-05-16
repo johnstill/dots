@@ -32,6 +32,9 @@ export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
 export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 source /usr/local/bin/virtualenvwrapper.sh
 
+# This is a dev machine, I don't need bytecode
+export PYTHONDONTWRITEBYTECODE=1
+
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
 export MANWIDTH=160
@@ -63,37 +66,47 @@ setopt menu_complete
 zstyle :compinstall filename "$ZDOTDIR/zshrc"
 autoload -Uz compinit && compinit
 
+
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' special-dirs ..
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+zstyle ':completion:*:-command-:*:' verbose false
 zstyle ':completion:*:approximate:' max-errors 'reply=( $((($#PREFIX+$#SUFFIX)/3 )) numeric )'
 zstyle ':completion:*:correct:*' insert-unambiguous true
-zstyle ':completion:*:corrections' format $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}'
 zstyle ':completion:*:correct:*' original true
+zstyle ':completion:*:corrections' format $'%{\e[0;31m%}%d (errors: %e)%{\e[0m%}'
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*:descriptions' format $'%{\e[0;31m%}completing %B%d%b%{\e[0m%}'
-zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
 zstyle ':completion:*:expand:*' tag-order all-expansions
 zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 zstyle ':completion:*:history-words' remove-all-dups yes
 zstyle ':completion:*:history-words' stop yes
-zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
 zstyle ':completion:*:matches' group 'yes'
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=5
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:options' auto-description '%d'
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:processes' command 'ps -au$USER'
-zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:-command-:*:' verbose false
-zstyle ':completion:*:warnings' format $'%{\e[0;31m%}No matches for:%{\e[0m%} %d'
-zstyle ':completion:*:*:zcompile:*' ignored-patterns '(*~|*.zwc)'
-zstyle ':completion:correct:' prompt 'correct to: %e'
-zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'
 zstyle ':completion:*:processes-names' command 'ps c -u ${USER} -o command | uniq'
+zstyle ':completion:*:warnings' format $'%{\e[0;31m%}No matches for:%{\e[0m%} %d'
+zstyle ':completion::(^approximate*):*:functions' ignored-patterns '_*'
+zstyle ':completion:correct:' prompt 'correct to: %e'
+
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*:complete:*' cache-path "$XDG_CACHE_HOME"
+
+# Completion settings for particular commands
+zstyle ':completion:*:*:(rm|nvim|git|less):*' ignore-line yes
+zstyle ':completion:*:*:(vim|nvim):*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+
+zstyle ':completion:*:man:*' menu yes select
 zstyle ':completion:*:manuals' separate-sections true
 zstyle ':completion:*:manuals.*' insert-sections true
-zstyle ':completion:*:man:*' menu yes select
 
 # Search path for sudo completion
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
@@ -104,11 +117,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
                                             /bin            \
                                             /usr/X11R6/bin
 
-zstyle ':completion:*' special-dirs ..
-zstyle ':completion:*' use-cache yes
-zstyle ':completion:*:complete:*' cache-path "$XDG_CACHE_HOME"
-zstyle ':completion:*:*:vim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
-zstyle ':completion:*:*:nvim:*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
 
 # TODO: the completion widget bundled with pip is far from ideal but currently
 # it doesn't look like much else is well maintained.  Potentially write my own?
