@@ -1,5 +1,6 @@
 " Version 2.0 - nvim minimalism
 " Plugins
+" Stuff
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/badwolf'
 Plug 'NLKNguyen/papercolor-theme'
@@ -76,6 +77,9 @@ set breakindent
 
 " don't force writing buffer before hiding it
 set hidden
+
+" Preview subsitute commands
+set inccommand=split
 
 let g:asterisk#keeppos = 1
 map *  <Plug>(asterisk-z*)
