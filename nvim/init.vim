@@ -127,3 +127,6 @@ command! TrimWhiteSpace call utils#TrimWhiteSpace()
 command! TreeView call utils#ProjectTreeView()
 command! Evimrc :vsplit $MYVIMRC
 command! Svimrc :source $MYVIMRC
+
+" Usefull commands for running specific types of terminal buffers
+command! RunIpy :vsplit term://ipython -i %

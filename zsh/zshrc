@@ -1,5 +1,5 @@
 # Version 2.0 - minimalism
-# Assume installed (via brew): nvim, coreutils
+# Assume installed: nvim, coreutils
 #########  BASICS  ############################################################
 export VISUAL=nvim
 export EDITOR=nvim
@@ -29,11 +29,20 @@ setopt correct
 
 # virtualenvwrapper
 export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-source /usr/local/bin/virtualenvwrapper.sh
+export VIRTUALENVWRAPPER_PYTHON=$(which python3.6)
 
-# This is a dev machine, I don't need bytecode
-export PYTHONDONTWRITEBYTECODE=1
+if [[ `uname` = 'Darwin' ]]; then
+    # The OS X location
+    source /usr/local/bin/virtualenvwrapper.sh
+    # Alias some BSD stuff back to GNU versions
+    alias ls='gls'
+    alias grep='ggrep'
+    # This is a dev machine, I don't need bytecode
+    export PYTHONDONTWRITEBYTECODE=1
+elif [[ `hostname -s` = 'inferno' ]]; then
+    # The Cent OS 7 location
+    source /usr/bin/virtualenvwrapper.sh
+fi
 
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
@@ -213,7 +222,7 @@ alias zv="$EDITOR $ZDOTDIR/zshrc"
 alias sv="source $ZDOTDIR/zshrc"
 
 # Coreutils aliases (brew installed specific)
-alias ls="gls -hF --color=auto --group-directories-first "
+alias ls="ls -hF --color=auto --group-directories-first "
 alias la="ls -la "
 alias ll="ls -l "
 
@@ -225,8 +234,6 @@ alias gbv="git branch -vv"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias cdg='cd $(git rev-parse --show-toplevel)'
-
-alias ngedit="nvim -O -c 'winc l | set ft=xml | winc h' *{ts,html,css}~*spec*"
 
 #########  KEYBINDINGS  #######################################################
 bindkey -v
