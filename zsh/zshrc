@@ -34,11 +34,13 @@ export VIRTUALENVWRAPPER_PYTHON=$(which python3.6)
 if [[ `uname` = 'Darwin' ]]; then
     # The OS X location
     source /usr/local/bin/virtualenvwrapper.sh
-    # Alias some BSD stuff back to GNU versions
-    alias ls='gls'
-    alias grep='ggrep'
     # This is a dev machine, I don't need bytecode
     export PYTHONDONTWRITEBYTECODE=1
+    # Put GNU versions of coreutils at the front of the path Remember that man
+    # thinks these are all prefixed with 'g', so `man ls` will not get you the
+    # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
+    # modifying the manpath to change this with no success.
+    export PATH="/usr/local/Cellar/coreutils/8.29/libexec/gnubin:$PATH"
 elif [[ `hostname -s` = 'inferno' ]]; then
     # The Cent OS 7 location
     source /usr/bin/virtualenvwrapper.sh
@@ -225,7 +227,7 @@ alias vv="$EDITOR $NVIMDIR/init.vim"
 alias zv="$EDITOR $ZDOTDIR/zshrc"
 alias sv="source $ZDOTDIR/zshrc"
 
-# Coreutils aliases (brew installed specific)
+# Coreutils
 alias ls="ls -hF --color=auto --group-directories-first "
 alias la="ls -la "
 alias ll="ls -l "
@@ -233,6 +235,7 @@ alias ll="ls -l "
 # Other convenience aliases
 alias grep="grep --color=auto "
 
+# Git
 alias gst="git status"
 alias gbv="git branch -vv"
 alias gd="git diff"
@@ -265,3 +268,9 @@ bindkey -M menuselect '+'       accept-and-menu-complete
 
 # C-[ lags a bit before changing modes, this changes that
 export KEYTIMEOUT=1
+
+
+#########  POST-INIT / CLEANUP  ###############################################
+# Remove duplicates from the path arrays
+typeset -aU path
+typeset -aU fpath
