@@ -163,7 +163,11 @@ autoload -Uz promptinit && promptinit
 PS1='%(?..[%F{red}%?%f])'           # If the last command had a non-zero status, display it
 PS1+='%B%F{cyan}%n%f%b'             # username
 PS1+="@"                            # *nix traditions...
-PS1+='%B%F{white}%m%f%b '           # hostname
+if [[ `hostname -s` = 'inferno' ]]; then
+    PS1+='%B%F{magenta}%m%f%b '     # hostname
+else
+    PS1+='%B%F{white}%m%f%b '       # hostname
+fi
 PS1+='%F{cyan}%20<..<%~%<<%f '      # the CWD truncated to 20 chars
 PS1+='${VIMODE}'                    # ZLE's current edit mode
 # '$' for normal insert mode
