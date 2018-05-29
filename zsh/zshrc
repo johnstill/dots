@@ -131,7 +131,7 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
 
 # TODO: the completion widget bundled with pip is far from ideal but currently
 # it doesn't look like much else is well maintained.  Potentially write my own?
-eval "`pip completion --zsh`"
+eval "`pip completion --zsh --disable-pip-version-check`"
 compctl -K _pip_completion pip3
 
 # If the current word is the first in the words array, rehash (this empties the
