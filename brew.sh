@@ -20,7 +20,7 @@ brew install gnu-sed --with-default-names
 brew install coreutils binutils diffutils
 
 # Dev things
-brew install htop tree wget nmap gzip pigz tmux
+brew install htop tree wget nmap gzip pigz tmux ctags
 brew install zsh neovim git node yarn python python@2
 pip3 install --upgrade pip setuptools wheel
 pip3 install --upgrade virtualenvwrapper
