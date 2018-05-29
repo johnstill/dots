@@ -1,6 +1,5 @@
 " Version 2.0 - nvim minimalism
 " Plugins
-" Stuff
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'sjl/badwolf'
 Plug 'NLKNguyen/papercolor-theme'
