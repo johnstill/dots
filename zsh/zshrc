@@ -27,24 +27,13 @@ setopt extendedglob
 setopt noglobdots
 setopt correct
 
-# virtualenvwrapper
-export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=$(which python3.6)
-
-if [[ `uname` = 'Darwin' ]]; then
-    # The OS X location
-    source /usr/local/bin/virtualenvwrapper.sh
-    # This is a dev machine, I don't need bytecode
-    export PYTHONDONTWRITEBYTECODE=1
-    # Put GNU versions of coreutils at the front of the path Remember that man
-    # thinks these are all prefixed with 'g', so `man ls` will not get you the
-    # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
-    # modifying the manpath to change this with no success.
-    export PATH="/usr/local/Cellar/coreutils/8.29/libexec/gnubin:$PATH"
-elif [[ `uname` = 'Linux' ]]; then
-    # The Linux location
-    source /usr/bin/virtualenvwrapper.sh
-fi
+ if [[ `uname` = 'Darwin' ]]; then
+     # Put GNU versions of coreutils at the front of the path Remember that man
+     # thinks these are all prefixed with 'g', so `man ls` will not get you the
+     # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
+     # modifying the manpath to change this with no success.
+     export PATH="/usr/local/Cellar/coreutils/8.29/libexec/gnubin:$PATH"
+ fi
 
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
@@ -131,8 +120,8 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
 
 # TODO: the completion widget bundled with pip is far from ideal but currently
 # it doesn't look like much else is well maintained.  Potentially write my own?
-eval "`pip completion --zsh --disable-pip-version-check`"
-compctl -K _pip_completion pip3
+#eval "`pip completion --zsh --disable-pip-version-check`"
+#compctl -K _pip_completion pip3
 
 # If the current word is the first in the words array, rehash (this empties the
 # command hash table, which forces zsh to start finding commands from scratch -
@@ -274,3 +263,11 @@ export KEYTIMEOUT=1
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath
+
+# pyenv & virtualenvwrapper
+export PYTHONDONTWRITEBYTECODE=1
+export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
+# Enable pyenv with virtualenvwrapper
+eval "$(pyenv init -)"
+pyenv global 3.7.0
+pyenv virtualenvwrapper_lazy
