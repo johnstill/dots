@@ -144,8 +144,8 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
 
 # TODO: the completion widget bundled with pip is far from ideal but currently
 # it doesn't look like much else is well maintained.  Potentially write my own?
-eval "`pip completion --zsh --disable-pip-version-check`"
-compctl -K _pip_completion pip3
+#eval "`pip completion --zsh --disable-pip-version-check`"
+#compctl -K _pip_completion pip3
 
 # If the current word is the first in the words array, rehash (this empties the
 # command hash table, which forces zsh to start finding commands from scratch -
@@ -287,3 +287,11 @@ export KEYTIMEOUT=1
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath
+
+# pyenv & virtualenvwrapper
+export PYTHONDONTWRITEBYTECODE=1
+export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
+# Enable pyenv with virtualenvwrapper
+eval "$(pyenv init -)"
+pyenv global 3.7.0
+pyenv virtualenvwrapper_lazy
