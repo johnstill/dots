@@ -27,11 +27,24 @@ setopt extendedglob
 setopt noglobdots
 setopt correct
 
+if [[ `uname` = 'Darwin' ]]; then
+    # On OSX make sure the most recent Python install really is first,
+    # since we manage them ourselves
+    path=(
+        "/Library/Frameworks/Python.framework/Versions/3.7/bin"
+        "/Library/Frameworks/Python.framework/Versions/3.6/bin"
+        "/Library/Frameworks/Python.framework/Versions/3.5/bin"
+        "/Library/Frameworks/Python.framework/Versions/2.7/bin"
+        "${path[@]}"
+    )
+fi
 # virtualenvwrapper
 export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
-export VIRTUALENVWRAPPER_PYTHON=$(which python3.6)
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 
 if [[ `uname` = 'Darwin' ]]; then
+    # Don't bother installing pip2 in the first place... pip should just be pip3
+    alias pip=pip3
     # The OS X location
     source /usr/local/bin/virtualenvwrapper.sh
     # This is a dev machine, I don't need bytecode

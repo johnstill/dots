@@ -21,6 +21,11 @@ brew install coreutils binutils diffutils
 
 # Dev things
 brew install htop tree wget nmap gzip pigz tmux ctags
-brew install zsh neovim git node yarn python python@2
-pip3 install --upgrade pip setuptools wheel
-pip3 install --upgrade virtualenvwrapper
+brew install zsh neovim git node yarn
+
+# Python dependencies
+brew install openssl readline sqlite3 xz zlib
+# Needed to build psycopg2, even if never used directly (prefer Docker)
+brew install postgresql
+
+# Get python itself from python.org, brew will complain if we use multiple versions anyways
