@@ -125,8 +125,13 @@ zstyle ':completion:*:complete:*' cache-path "$XDG_CACHE_HOME"
 
 # Completion settings for particular commands
 zstyle ':completion:*:*:(rm|nvim|git|less):*' ignore-line yes
-zstyle ':completion:*:*:(vim|nvim):*' file-patterns '^(*.py(c|o)|__pycache__):source-files' '*:all-files'
 zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+
+# Never autocomplete these files for vim / nvim
+zstyle ':completion:*:*:(vim|nvim):*' \
+    file-patterns \
+    '^(*.py(c|o)|__pycache__|*.so):source-files' \
+    '*:all-files'
 
 zstyle ':completion:*:man:*' menu yes select
 zstyle ':completion:*:manuals' separate-sections true
@@ -287,11 +292,3 @@ export KEYTIMEOUT=1
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath
-
-# pyenv & virtualenvwrapper
-export PYTHONDONTWRITEBYTECODE=1
-export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
-# Enable pyenv with virtualenvwrapper
-eval "$(pyenv init -)"
-pyenv global 3.7.0
-pyenv virtualenvwrapper_lazy
