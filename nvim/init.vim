@@ -6,10 +6,6 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'romainl/Apprentice'
 
 Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
-Plug 'junegunn/fzf.vim'
-Plug 'majutsushi/tagbar', {'on': 'TagbarToggle'}
 Plug 'Konfekt/FoldText'
 " Plug 'Konfekt/FastFold' TODO: is this needed with Neovim (or at all?)
 Plug 'haya14busa/vim-asterisk'
@@ -19,6 +15,7 @@ Plug 'elzr/vim-json'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
+Plug 'chr4/nginx.vim'
 
 " This python syntax file is actually up to date and maintained - the official
 " one hasn't been updated in two years :(
