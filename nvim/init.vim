@@ -86,6 +86,9 @@ map g# <Plug>(asterisk-gz#)
 nnoremap <space>iv :set list!<cr>
 tnoremap <ESC> <C-\><C-n>
 
+nnoremap <C-w>q <Nop>
+nnoremap <C-w><C-q> <Nop>
+
 " NetRW settings
 " Quick Command Reference: `:h netrw-browse-maps`
 let g:netrw_sizestyle='H'   " use human readable, base 1024
