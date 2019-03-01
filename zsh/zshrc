@@ -38,8 +38,9 @@ if [[ `uname` = 'Darwin' ]]; then
         "${path[@]}"
     )
     export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-elif [[ `hostname -s` = 'inferno' ]]; then
+elif [[ `uname` = 'Linux' ]]; then
     # We're currently pinned to Python3.6 as latest - alias it over python3
+    # These work on Cent OS 7
     alias python3='python3.6 '
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.6
 fi
@@ -187,7 +188,7 @@ autoload -Uz promptinit && promptinit
 PS1='%(?..[%F{red}%?%f])'           # If the last command had a non-zero status, display it
 PS1+='%B%F{cyan}%n%f%b'             # username
 PS1+="@"                            # *nix traditions...
-if [[ `hostname -s` = 'inferno' ]]; then
+if [[ `hostname -s` = 'inferno' || `hostname -s` = 'praxis' ]]; then
     PS1+='%B%F{magenta}%m%f%b '     # hostname
 else
     PS1+='%B%F{white}%m%f%b '       # hostname
@@ -290,7 +291,6 @@ bindkey -M menuselect '+'       accept-and-menu-complete
 
 # C-[ lags a bit before changing modes, this changes that
 export KEYTIMEOUT=1
-
 
 #########  POST-INIT / CLEANUP  ###############################################
 # Remove duplicates from the path arrays
