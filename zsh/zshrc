@@ -45,15 +45,15 @@ export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 if [[ `uname` = 'Darwin' ]]; then
     # Don't bother installing pip2 in the first place... pip should just be pip3
     alias pip=pip3
-    # The OS X location
-    source /usr/local/bin/virtualenvwrapper.sh
+    # The OS X location given Python3.7 is installed
+    source /Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
     # This is a dev machine, I don't need bytecode
     export PYTHONDONTWRITEBYTECODE=1
     # Put GNU versions of coreutils at the front of the path Remember that man
     # thinks these are all prefixed with 'g', so `man ls` will not get you the
     # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
     # modifying the manpath to change this with no success.
-    export PATH="/usr/local/Cellar/coreutils/8.29/libexec/gnubin:$PATH"
+    export PATH="/usr/local/Cellar/coreutils/8.30_2/libexec/gnubin:$PATH"
 elif [[ `uname` = 'Linux' ]]; then
     # The Linux location
     source /usr/bin/virtualenvwrapper.sh
@@ -252,6 +252,7 @@ alias ll="ls -l "
 
 # Other convenience aliases
 alias grep="grep --color=auto "
+alias ct=" clear; tree --dirsfirst "
 
 # Git
 alias gst="git status"

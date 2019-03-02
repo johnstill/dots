@@ -7,7 +7,6 @@ Plug 'romainl/Apprentice'
 
 Plug 'editorconfig/editorconfig-vim'
 Plug 'Konfekt/FoldText'
-" Plug 'Konfekt/FastFold' TODO: is this needed with Neovim (or at all?)
 Plug 'haya14busa/vim-asterisk'
 
 Plug 'ervandew/sgmlendtag'
@@ -17,10 +16,8 @@ Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'chr4/nginx.vim'
 
-" This python syntax file is actually up to date and maintained - the official
-" one hasn't been updated in two years :(
+" Python utilities
 Plug 'vim-python/python-syntax'
-" Other python utilities
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tmhedberg/SimpylFold'
 call plug#end()
@@ -57,19 +54,25 @@ let g:python3_host_prog=s:ROOT_DIR . '/.env3/bin/python'
 
 " A number of options I used to have set are now set by default with nvim.
 " Ref: `:h nvim-defaults`
+
+" Tabstops, etc
 set listchars=eol:¬,tab:▸\ ,trail:∙
 set softtabstop=4
 set shiftwidth=4
 set expandtab
 set shiftround
 
+" Position of splits
 set splitright
 set splitbelow
 
-set mouse=a
+" wrapping / breaking
 set showbreak=↪
 set linebreak
 set breakindent
+
+" Use the mouse if able
+set mouse=a
 
 " don't force writing buffer before hiding it
 set hidden
@@ -83,8 +86,8 @@ map #  <Plug>(asterisk-z#)
 map g* <Plug>(asterisk-gz*)
 map g# <Plug>(asterisk-gz#)
 
+inoremap jk <ESC>
 nnoremap <space>iv :set list!<cr>
-tnoremap <ESC> <C-\><C-n>
 
 " NetRW settings
 " Quick Command Reference: `:h netrw-browse-maps`
