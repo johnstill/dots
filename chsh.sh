@@ -1,7 +1,7 @@
 #!/bin/bash
 cat >> ~/.bash_profile << "HERE"
 
-# This snipper will launch a Z Shell as your login shell no matter what chsh
+# This snippet will launch a Z Shell as your login shell no matter what chsh
 # thinks your login shell should be.  Useful if your user account is pulled
 # from LDAP, for example.
 if [ "$SHELL" != "/usr/bin/zsh" ]; then
