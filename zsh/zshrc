@@ -28,41 +28,38 @@ setopt noglobdots
 setopt correct
 
 if [[ `uname` = 'Darwin' ]]; then
-    # On OSX make sure the most recent Python install really is first,
-    # since we manage them ourselves
     path=(
+        # On OSX make sure the most recent Python install really is first,
+        # since we manage them ourselves.
         "/Library/Frameworks/Python.framework/Versions/3.7/bin"
         "/Library/Frameworks/Python.framework/Versions/3.6/bin"
         "/Library/Frameworks/Python.framework/Versions/3.5/bin"
         "/Library/Frameworks/Python.framework/Versions/2.7/bin"
+        # Put GNU versions of coreutils at the front of the path Remember that man
+        # thinks these are all prefixed with 'g', so `man ls` will not get you the
+        # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
+        # modifying the manpath to change this with no success.
+        "/usr/local/opt/coreutils/libexec/gnubin"
+        # Existing path
         "${path[@]}"
     )
     export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-elif [[ `uname` = 'Linux' ]]; then
-    # We're currently pinned to Python3.6 as latest - alias it over python3
-    # These work on Cent OS 7
-    alias python3='python3.6 '
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.6
-fi
-# virtualenvwrapper
-export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
-
-if [[ `uname` = 'Darwin' ]]; then
     # Don't bother installing pip2 in the first place... pip should just be pip3
     alias pip=pip3
     # The OS X location given Python3.7 is installed
     source /Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
     # This is a dev machine, I don't need bytecode
     export PYTHONDONTWRITEBYTECODE=1
-    # Put GNU versions of coreutils at the front of the path Remember that man
-    # thinks these are all prefixed with 'g', so `man ls` will not get you the
-    # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
-    # modifying the manpath to change this with no success.
-    export PATH="/usr/local/Cellar/coreutils/8.30_2/libexec/gnubin:$PATH"
 elif [[ `uname` = 'Linux' ]]; then
+    # We're currently pinned on Cent OS 7 to Python3.6 as latest - alias it
+    # over python3
+    alias python3='python3.6 '
+    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.6
     # The Linux location
     source /usr/bin/virtualenvwrapper.sh
 fi
+# virtualenvwrapper
+export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
 
 export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
 export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
@@ -254,6 +251,7 @@ alias sv="source $ZDOTDIR/zshrc"
 alias ls="ls -hF --color=auto --group-directories-first "
 alias la="ls -la "
 alias ll="ls -l "
+alias l="ls -l"
 
 # Other convenience aliases
 alias grep="grep --color=auto "
@@ -294,6 +292,9 @@ bindkey -M menuselect '+'       accept-and-menu-complete
 export KEYTIMEOUT=1
 
 #########  POST-INIT / CLEANUP  ###############################################
+# Make sure we have a home directory bin dir in our path
+mkdir -p "$HOME/bin"
+PATH="$HOME/bin:$PATH"
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath

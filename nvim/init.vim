@@ -1,25 +1,27 @@
 " Version 2.0 - nvim minimalism
 " Plugins
 call plug#begin('~/.local/share/nvim/plugged')
+" Colorschemes
 Plug 'sjl/badwolf'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'romainl/Apprentice'
-
+" Misc Utils
 Plug 'editorconfig/editorconfig-vim'
 Plug 'Konfekt/FoldText'
 Plug 'haya14busa/vim-asterisk'
-
+" JS, JSX, other misc filetypes
 Plug 'ervandew/sgmlendtag'
 Plug 'elzr/vim-json'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'chr4/nginx.vim'
-
-" Python utilities
+" Python
 Plug 'vim-python/python-syntax'
 Plug 'Vimjas/vim-python-pep8-indent'
 Plug 'tmhedberg/SimpylFold'
+" Julia
+Plug 'JuliaEditorSupport/julia-vim'
 call plug#end()
 
 augroup recolor
