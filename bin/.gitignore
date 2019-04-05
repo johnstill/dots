@@ -1,0 +1,5 @@
+# Ignore everything in this directory
+/*
+# Except for things we want pretty much anywhere
+!.gitignore
+!pull-all
