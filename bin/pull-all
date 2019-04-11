@@ -14,12 +14,17 @@ reset = '\u001b[0m'
 colors = tuple(f'\u001b[38;5;{i*16+j}m ' for i in range(16) for j in range(16))
 colors = itertools.cycle(random.sample(colors, k=len(colors)))
 
+def delay_iter():
+    for interval in itertools.count(0.0, 0.25):
+        yield from itertools.repeat(interval, 4)
+
 def list_repos():
     """List all git repos in the current directory"""
     return tuple(str(file) for file in pathlib.Path().iterdir()
                  if file.is_dir() and (file/'.git').is_dir())
 
-async def git_pull(directory):
+async def git_pull(directory, delay):
+    await asyncio.sleep(delay)
     prefix = f'{next(colors)}{directory}{reset}'
     process = await asyncio.create_subprocess_shell(
         f'git -c color.ui=always -C {shlex.quote(directory)} pull origin master',
@@ -33,7 +38,8 @@ async def git_pull(directory):
         print(prefix, '[stdout]: ', line)
 
 async def main():
-    tasks = [git_pull(directory) for directory in list_repos()]
+    delay = delay_iter()
+    tasks = [git_pull(directory, next(delay)) for directory in list_repos()]
     if not tasks:
         print('No repositories present', file=sys.stderr)
         raise SystemExit(1)

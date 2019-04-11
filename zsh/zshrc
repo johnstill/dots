@@ -44,8 +44,6 @@ if [[ `uname` = 'Darwin' ]]; then
         "${path[@]}"
     )
     export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-    # Don't bother installing pip2 in the first place... pip should just be pip3
-    alias pip=pip3
     # The OS X location given Python3.7 is installed
     source /Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
     # This is a dev machine, I don't need bytecode
