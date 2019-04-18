@@ -1,0 +1,11 @@
+# Help on basic command line editing
+echo -e "\
+fc              'Fix command', open an editor with your last command
+r               Repeat last command
+r <WORD>        Repeat last command that contains substring <WORD>
+
+Custom bindings:
+CTRL o          (push-line-or-edit) stash the current command line
+ESC v           (edit-command-line) Edit the command line in \$EDITOR ($EDITOR)"
+
+# vim: filetype=zsh

@@ -261,6 +261,8 @@ alias gbv="git branch -vv"
 alias gd="git diff"
 alias gdc="git diff --cached"
 alias cdg='cd $(git rev-parse --show-toplevel)'
+alias gaa='git add --all'
+alias gcm='git commit -m'
 
 #########  KEYBINDINGS  #######################################################
 bindkey -v
@@ -269,6 +271,18 @@ bindkey '^E'    end-of-line
 bindkey '^?'    backward-delete-char
 bindkey '^h'    backward-delete-char
 bindkey '^w'    backward-kill-word
+
+# Command line editing: when in vi cmd mode, pressing "v" will open $EDITOR and
+# let you edit the command line using it.  Save-closing the editor replaces
+# your command line with the edited version.
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
+# CTRL-O will stash the current command line (the whole thing), let you run
+# another command, and then when the other command exits it will restore the
+# stashed command line.
+bindkey '^O' push-line-or-edit
 
 # History keybindings
 bindkey '^[[A'  history-beginning-search-backward
@@ -287,6 +301,7 @@ bindkey -M menuselect '^[[Z'    reverse-menu-complete
 bindkey -M menuselect '+'       accept-and-menu-complete
 
 # C-[ lags a bit before changing modes, this changes that
+# This is equivalent to 10ms
 export KEYTIMEOUT=1
 
 #########  POST-INIT / CLEANUP  ###############################################
