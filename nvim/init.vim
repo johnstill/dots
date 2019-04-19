@@ -46,13 +46,13 @@ set nofoldenable
 " Tags and tagbar
 let g:tagbar_show_visibility=0
 
-" These are needed to correctly setup python provider support even when I'm
-" working inside of a virtual environment.  Use virtualenv (or whatever) to
-" create these two virtual environments, install neovim into each one, and
-" then never touch them again.
-let s:ROOT_DIR=fnamemodify(expand("$MYVIMRC"), ":p:h")
-let g:python_host_prog=s:ROOT_DIR . '/.env/bin/python'
-let g:python3_host_prog=s:ROOT_DIR . '/.env3/bin/python'
+" I used to keep special virtual environments in my nvim config directory for
+" python provider support.  However, since my home directory is shared via nfs
+" among several machines, the providers would only work on the machine they
+" were installed with.  So now, I have to just use system specific resources
+" and make sure pynvim is installed.
+let g:python_host_prog='/usr/bin/python2.7'
+let g:python3_host_prog='/usr/bin/python3.6'
 
 " A number of options I used to have set are now set by default with nvim.
 " Ref: `:h nvim-defaults`
