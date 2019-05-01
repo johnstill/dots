@@ -51,8 +51,8 @@ let g:tagbar_show_visibility=0
 " among several machines, the providers would only work on the machine they
 " were installed with.  So now, I have to just use system specific resources
 " and make sure pynvim is installed.
-let g:python_host_prog='/usr/bin/python2.7'
-let g:python3_host_prog='/usr/bin/python3.6'
+let g:python_host_prog='/usr/local/bin/python2'
+let g:python3_host_prog='/usr/local/bin/python3'
 
 " A number of options I used to have set are now set by default with nvim.
 " Ref: `:h nvim-defaults`
