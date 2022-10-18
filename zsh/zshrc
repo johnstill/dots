@@ -254,6 +254,7 @@ alias l="ls -l"
 # Other convenience aliases
 alias grep="grep --color=auto "
 alias ct=" clear; tree --dirsfirst "
+alias tree="tree -C --dirsfirst"
 
 # Git
 alias gst="git status"
