@@ -1,0 +1,18 @@
+# Add postgres-15 ahead of distro binaries
+export PATH="/usr/pgsql-15/bin:$PATH"
+
+export PGUSER="$USER"
+export PGDATABASE="sdcurves"
+
+# Machine specific paths
+if [[ `hostname -s` = 'inferno' ]]; then
+    PSEUDOHOME="/hd1/stilljm/misc"
+fi
+if [[ `hostname -s` = 'praxis' ]]; then
+    PSEUDOHOME="/raid/stilljm/misc"
+fi
+
+export MAMBA_EXE="$PSEUDOHOME/mamba/micromamba"
+export MAMBA_ROOT_PREFIX="$PSEUDOHOME/mamba"
+
+alias ipython="ipython --HistoryManager.hist_file=$PSEUDOHOME/ipython_hist.sqlite"

@@ -1,9 +1,9 @@
-# Version 2.0 - minimalism
 # Assume installed: nvim, coreutils
 #########  BASICS  ############################################################
 export VISUAL=nvim
 export EDITOR=nvim
 
+# These should be set in .zshenv.
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 export XDG_DATA_HOME=$HOME/.local/share
@@ -27,40 +27,11 @@ setopt extendedglob
 setopt noglobdots
 setopt correct
 
-if [[ `uname` = 'Darwin' ]]; then
-    path=(
-        # On OSX make sure the most recent Python install really is first,
-        # since we manage them ourselves.
-        "/Library/Frameworks/Python.framework/Versions/3.7/bin"
-        "/Library/Frameworks/Python.framework/Versions/3.6/bin"
-        "/Library/Frameworks/Python.framework/Versions/3.5/bin"
-        "/Library/Frameworks/Python.framework/Versions/2.7/bin"
-        # Put GNU versions of coreutils at the front of the path Remember that man
-        # thinks these are all prefixed with 'g', so `man ls` will not get you the
-        # manpage for GNU's ls.  You want `man gls`.  I have tried several ways of
-        # modifying the manpath to change this with no success.
-        "/usr/local/opt/coreutils/libexec/gnubin"
-        # Existing path
-        "${path[@]}"
-    )
-    export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-    # The OS X location given Python3.7 is installed
-    source /Library/Frameworks/Python.framework/Versions/3.7/bin/virtualenvwrapper.sh
-    # This is a dev machine, I don't need bytecode
-    export PYTHONDONTWRITEBYTECODE=1
-elif [[ `uname` = 'Linux' ]]; then
-#    # We're currently pinned on Cent OS 7 to Python3.6 as latest - alias it
-#    # over python3
-#    alias python3='python3.6 '
-#    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3.6
-#    # The Linux location
-#    source /usr/bin/virtualenvwrapper.sh
-fi
-# virtualenvwrapper
-export WORKON_HOME=$XDG_DATA_HOME/virtualenvs
+# BSD (i.e. OS X)
+export LSCOLORS='Gxfxexdxcxegedabagacad'
+# Linux / Posix
+export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
 
-export LSCOLORS='Gxfxexdxcxegedabagacad'                                                                    # BSD (i.e. OS X)
-export LS_COLORS='di=1;36:ln=35:so=34:pi=33:ex=32:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'    # Linux / Posix
 export MANWIDTH=160
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;31m'
@@ -89,7 +60,6 @@ setopt completeinword
 setopt menu_complete
 zstyle :compinstall filename "$ZDOTDIR/zshrc"
 autoload -Uz compinit && compinit
-
 
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' matcher-list '' '+m:{a-z}={A-Z}' '+m:{A-Z}={a-z}'
@@ -145,12 +115,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin \
                                             /sbin           \
                                             /bin            \
                                             /usr/X11R6/bin
-
-
-# TODO: the completion widget bundled with pip is far from ideal but currently
-# it doesn't look like much else is well maintained.  Potentially write my own?
-#eval "`pip completion --zsh --disable-pip-version-check`"
-#compctl -K _pip_completion pip3
 
 # If the current word is the first in the words array, rehash (this empties the
 # command hash table, which forces zsh to start finding commands from scratch -
@@ -312,3 +276,13 @@ PATH="$HOME/bin:$PATH"
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath
+
+# MAMBA_EXE and MAMBA_ROOT_PREFIX *must* be set in zshenv!
+# Otherwise NFS (multiple machines, one home dir) messes everything up
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+fi
+unset __mamba_setup
+micromamba activate
+micromamba activate inferno
