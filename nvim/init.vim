@@ -100,6 +100,8 @@ let g:netrw_sizestyle='H'   " use human readable, base 1024
 " Use 'a' to toggle hiding / showing these patterns. Unfortunately,
 " netrw_gitignore#Hide never generates correct patterns :/
 let g:netrw_list_hide='__pycache__,.*\.py[co],.*\.so'
+" Tree view
+let g:netrw_liststype=3
 
 augroup basics
     autocmd!

@@ -1,12 +1,14 @@
-# Add postgres-15 ahead of distro binaries
-export PATH="/usr/pgsql-15/bin:$PATH"
+# Machine specific initialization
 
-export PGUSER="$USER"
-export PGDATABASE="sdcurves"
+# By default (say on Darwin) store everything in HOME
+PSEUDOHOME="$HOME"
 
-# Machine specific paths
 if [[ `hostname -s` = 'inferno' ]]; then
     PSEUDOHOME="/hd1/stilljm/misc"
+    # Add postgres-15 ahead of distro binaries
+    export PATH="/usr/pgsql-15/bin:$PATH"
+    export PGUSER="$USER"
+    export PGDATABASE="sdcurves"
 fi
 if [[ `hostname -s` = 'praxis' ]]; then
     PSEUDOHOME="/raid/stilljm/misc"

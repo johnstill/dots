@@ -17,3 +17,5 @@
 	email = john.m.still@vumc.org
 
 # vim: ft=gitconfig noexpandtab
+[pull]
+	ff = only

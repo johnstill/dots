@@ -210,7 +210,11 @@ alias zv="$EDITOR $ZDOTDIR/zshrc"
 alias sv="source $ZDOTDIR/zshrc"
 
 # Coreutils
-alias ls="ls -hF --color=auto --group-directories-first "
+if [[ `uname` = 'Darwin' ]]; then
+    alias ls="/usr/local/bin/gls -hF --color=auto --group-directories-first"
+else
+    alias ls="ls -hF --color=auto --group-directories-first "
+fi
 alias la="ls -la "
 alias ll="ls -l "
 alias l="ls -l"
@@ -285,7 +289,11 @@ if [ $? -eq 0 ]; then
 fi
 unset __mamba_setup
 micromamba activate
-micromamba activate `hostname -s`
+if [[ `uname` = 'Darwin' ]]; then
+    micromamba activate osx
+else
+    micromamba activate `hostname -s`
+fi
 
 # CONDA_PREFIX has been set by the prior micromamba activate to essentially be
 # `$MAMBA_ROOT_PREFIX/envs/`hostname -s`/
