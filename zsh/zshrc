@@ -285,4 +285,8 @@ if [ $? -eq 0 ]; then
 fi
 unset __mamba_setup
 micromamba activate
-micromamba activate inferno
+micromamba activate `hostname -s`
+
+# CONDA_PREFIX has been set by the prior micromamba activate to essentially be
+# `$MAMBA_ROOT_PREFIX/envs/`hostname -s`/
+export LD_PRELOAD="$CONDA_PREFIX/lib/libiomp5.so"

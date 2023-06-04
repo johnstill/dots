@@ -16,3 +16,7 @@ export MAMBA_EXE="$PSEUDOHOME/mamba/micromamba"
 export MAMBA_ROOT_PREFIX="$PSEUDOHOME/mamba"
 
 alias ipython="ipython --HistoryManager.hist_file=$PSEUDOHOME/ipython_hist.sqlite"
+
+export KMP_AFFINITY='granularity=fine,compact,1,0'
+#export KMP_BLOCKTIME=1
+# Lowering the block time seems to hurt more than help

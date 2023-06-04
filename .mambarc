@@ -1,0 +1,8 @@
+# This file goes in $MAMBA_ROOT_PREFIX
+
+channels:
+    - conda-forge
+    - pytorch
+    - intel
+
+# vim: ft=yaml
