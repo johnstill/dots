@@ -14,8 +14,13 @@ if [[ `hostname -s` = 'praxis' ]]; then
     PSEUDOHOME="/raid/stilljm/misc"
 fi
 
-export MAMBA_EXE="$PSEUDOHOME/mamba/micromamba"
-export MAMBA_ROOT_PREFIX="$PSEUDOHOME/mamba"
+if [[ `uname` = 'Darwin' ]]; then
+    export MAMBA_EXE='/usr/local/opt/micromamba/bin/micromamba'
+    export MAMBA_ROOT_PREFIX='/Users/stilljm/micromamba'
+else
+    export MAMBA_EXE="$PSEUDOHOME/mamba/micromamba"
+    export MAMBA_ROOT_PREFIX="$PSEUDOHOME/mamba"
+fi
 
 alias ipython="ipython --HistoryManager.hist_file=$PSEUDOHOME/ipython_hist.sqlite"
 

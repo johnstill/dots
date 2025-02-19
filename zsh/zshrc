@@ -14,6 +14,7 @@ mkdir -p $XDG_CONFIG_HOME       \
          $XDG_CACHE_HOME        \
          $XDG_DATA_HOME         \
          $ZDOTDIR               \
+         $ZDOTDIR/zfunctions    \
          $NVIMDIR
 
 zmodload -i zsh/parameter
@@ -41,6 +42,7 @@ export LESS_TERMCAP_so=$'\E[01;44;33m'
 export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
+# Make sure dots/zsh/zfunctions/ is copied into $ZDOTDIR
 fpath=( $ZDOTDIR/zfunctions "${fpath[@]}" )
 autoload -Uz $(ls $ZDOTDIR/zfunctions)
 
@@ -283,17 +285,12 @@ typeset -aU fpath
 
 # MAMBA_EXE and MAMBA_ROOT_PREFIX *must* be set in zshenv!
 # Otherwise NFS (multiple machines, one home dir) messes everything up
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__mamba_setup"
 fi
 unset __mamba_setup
-micromamba activate
-if [[ `uname` = 'Darwin' ]]; then
-    micromamba activate osx
-else
-    micromamba activate `hostname -s`
-fi
+micromamba activate cml_tools
 
 # CONDA_PREFIX has been set by the prior micromamba activate to essentially be
 # `$MAMBA_ROOT_PREFIX/envs/`hostname -s`/
