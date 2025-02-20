@@ -15,8 +15,8 @@ if [[ `hostname -s` = 'praxis' ]]; then
 fi
 
 if [[ `uname` = 'Darwin' ]]; then
-    export MAMBA_EXE='/usr/local/opt/micromamba/bin/micromamba'
-    export MAMBA_ROOT_PREFIX='/Users/stilljm/micromamba'
+    export MAMBA_EXE="$HOME/.local/bin/micromamba"
+    export MAMBA_ROOT_PREFIX="$HOME/micromamba"
 else
     export MAMBA_EXE="$PSEUDOHOME/mamba/micromamba"
     export MAMBA_ROOT_PREFIX="$PSEUDOHOME/mamba"

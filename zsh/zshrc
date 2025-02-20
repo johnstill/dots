@@ -213,7 +213,7 @@ alias sv="source $ZDOTDIR/zshrc"
 
 # Coreutils
 if [[ `uname` = 'Darwin' ]]; then
-    alias ls="/usr/local/bin/gls -hF --color=auto --group-directories-first"
+    alias ls="/opt/homebrew/bin/gls -hF --color=auto --group-directories-first"
 else
     alias ls="ls -hF --color=auto --group-directories-first "
 fi
