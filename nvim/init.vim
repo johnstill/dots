@@ -16,6 +16,7 @@ Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'chr4/nginx.vim'
+Plug 'cespare/vim-toml'
 " Python
 Plug 'vim-python/python-syntax'
 Plug 'Vimjas/vim-python-pep8-indent'
@@ -26,12 +27,10 @@ call plug#end()
 
 augroup recolor
     autocmd!
-    " Default apprentice is slightly too washed out for my taste, but I LOVE
-    " the emphasis on blue-green
-    autocmd ColorScheme * highlight Normal ctermbg=NONE
+    " Remove all background color
+    autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
 augroup END
-
-colorscheme apprentice
+colorscheme badwolf
 
 " Syntax highlight python embedded in vimscript
 let g:vimsyn_embed='P'
