@@ -213,7 +213,7 @@ alias sv="source $ZDOTDIR/zshrc"
 
 # Coreutils
 if [[ `uname` = 'Darwin' ]]; then
-    alias ls="/opt/homebrew/bin/gls -hF --color=auto --group-directories-first"
+    alias ls="`which gls` -hF --color=auto --group-directories-first"
 else
     alias ls="ls -hF --color=auto --group-directories-first "
 fi
@@ -223,7 +223,7 @@ alias l="ls -l"
 
 # Other convenience aliases
 alias grep="grep --color=auto "
-alias ct=" clear; tree --dirsfirst "
+alias ct=" clear; tree --dirsfirst -I __pycache__ "
 alias tree="tree -C --dirsfirst"
 
 # Git
