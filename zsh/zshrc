@@ -223,8 +223,7 @@ alias l="ls -l"
 
 # Other convenience aliases
 alias grep="grep --color=auto "
-alias ct=" clear; tree --dirsfirst -I __pycache__ "
-alias tree="tree -C --dirsfirst"
+alias tree="tree -C --dirsfirst -I '__pycache__|*.egg-info'"
 
 # Git
 alias gst="git status"
