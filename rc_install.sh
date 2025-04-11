@@ -8,7 +8,7 @@ cp zsh/zshrc $HOME/.zshrc
 
 mkdir -p $HOME/.config/zsh
 cp -r zsh/zfunctions $HOME/.config/zsh/zfunctions
-cp -r nvim $HOME/.config/nvim
+cp -r nvim/* $HOME/.config/nvim/
 
 curl -fLo \
     "$HOME/.config/nvim/site/autoload/plug.vim" \
