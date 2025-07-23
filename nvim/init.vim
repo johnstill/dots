@@ -1,49 +1,7 @@
-" Version 2.0 - nvim minimalism
-" Plugins
-call plug#begin('~/.local/share/nvim/plugged')
-" Colorschemes
-Plug 'sjl/badwolf'
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'romainl/Apprentice'
-" Misc Utils
-Plug 'editorconfig/editorconfig-vim'
-Plug 'Konfekt/FoldText'
-Plug 'haya14busa/vim-asterisk'
-" JS, JSX, other misc filetypes
-Plug 'ervandew/sgmlendtag'
-Plug 'elzr/vim-json'
-Plug 'mxw/vim-jsx'
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'chr4/nginx.vim'
-Plug 'cespare/vim-toml'
-" Python
-Plug 'vim-python/python-syntax'
-Plug 'Vimjas/vim-python-pep8-indent'
-Plug 'tmhedberg/SimpylFold'
-" Julia
-Plug 'JuliaEditorSupport/julia-vim'
-call plug#end()
-
-augroup recolor
-    autocmd!
-    " Remove all background color
-    autocmd ColorScheme * highlight Normal guibg=NONE ctermbg=NONE
-augroup END
-colorscheme badwolf
-
-" Syntax highlight python embedded in vimscript
-let g:vimsyn_embed='P'
-
-" Enable all python highlighting options specified in the syntax file
-let g:python_highlight_all=1
-" Minimal (but correct) folding: too many folds are more hindrance than help
-let g:SimpylFold_fold_import=0
-" Folds are off by default; but toggle with `zi`
-set nofoldenable
-
-" Tags and tagbar
-let g:tagbar_show_visibility=0
+" Version 3.0 - real minimalism
+colorscheme retrobox
+set number
+set colorcolumn=80
 
 " I used to keep special virtual environments in my nvim config directory for
 " python provider support.  However, since my home directory is shared via nfs
@@ -52,9 +10,6 @@ let g:tagbar_show_visibility=0
 " and make sure pynvim is installed.
 let g:python_host_prog='/usr/local/bin/python2'
 let g:python3_host_prog='/usr/local/bin/python3'
-
-" A number of options I used to have set are now set by default with nvim.
-" Ref: `:h nvim-defaults`
 
 " Tabstops, etc
 set listchars=eol:¬,tab:▸\ ,trail:∙
@@ -72,24 +27,16 @@ set showbreak=↪
 set linebreak
 set breakindent
 
-" Use the mouse if able
-set mouse=a
-
 " don't force writing buffer before hiding it
 set hidden
 
-" Preview subsitute commands
+" Previews the results of subsitution commands
 set inccommand=split
-
-let g:asterisk#keeppos = 1
-map *  <Plug>(asterisk-z*)
-map #  <Plug>(asterisk-z#)
-map g* <Plug>(asterisk-gz*)
-map g# <Plug>(asterisk-gz#)
 
 inoremap jk <ESC>
 nnoremap <space>iv :set list!<cr>
 
+" `CTRL-W q` quits the current window. Almost never what I want.
 nnoremap <C-w>q <Nop>
 nnoremap <C-w><C-q> <Nop>
 
@@ -102,36 +49,31 @@ let g:netrw_list_hide='__pycache__,.*\.py[co],.*\.so'
 " Tree view
 let g:netrw_liststype=3
 
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
 augroup basics
     autocmd!
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
     autocmd BufReadPost *
     \ if line("'\"") >= 1 && line("'\"") <= line("$") |
     \   exe "normal! g`\"" |
     \ endif
-    " Treat web technologies has being 2-space indents by default
+augroup END
+
+" Treat web technologies has being 2-space indents by default
+augroup twospacetab
+    autocmd!
     autocmd BufRead,BufNewFile *.{ts,js,jsx,html,css,json,yml}
     \ setlocal softtabstop=2 shiftwidth=2 textwidth=0
 augroup END
 
+" Disable this by running `:autocmd! trimws`
+" Automatically trim trailing whitespace from every kind of file except
+" whats in the filetype blacklist
 augroup trimws
     autocmd!
-    " Disable this by running `:autocmd! trimws`
-    " Automatically trim trailing whitespace from every kind of file except
-    " whats in the filetype blacklist
     autocmd BufWritePre *
     \ if index(["markdown"], &filetype) < 0 |
     \   call utils#TrimWhiteSpace() |
     \ endif
 augroup END
-
-command! SyntaxItem echo utils#SyntaxItem()
-command! TrimWhiteSpace call utils#TrimWhiteSpace()
-command! TreeView call utils#ProjectTreeView()
-command! Evimrc :vsplit $MYVIMRC
-command! Svimrc :source $MYVIMRC
-
-" Usefull commands for running specific types of terminal buffers
-command! RunIpy :vsplit term://ipython -i %
