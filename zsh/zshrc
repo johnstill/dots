@@ -21,8 +21,6 @@ zmodload -i zsh/parameter
 zmodload -i zsh/complist
 zmodload -i zsh/deltochar
 zmodload -i zsh/mathfunc
-autoload -Uz colors && colors
-autoload -U zmv
 setopt auto_pushd
 setopt extendedglob
 setopt noglobdots
@@ -45,6 +43,8 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # Make sure dots/zsh/zfunctions/ is copied into $ZDOTDIR
 fpath=( $ZDOTDIR/zfunctions "${fpath[@]}" )
 autoload -Uz $(ls $ZDOTDIR/zfunctions)
+autoload +X colors
+autoload +X zmv
 
 #########  HISTORY  ###########################################################
 autoload -Uz history-beginning-search-menu
@@ -281,12 +281,3 @@ PATH="$HOME/bin:$PATH"
 # Remove duplicates from the path arrays
 typeset -aU path
 typeset -aU fpath
-
-# MAMBA_EXE and MAMBA_ROOT_PREFIX *must* be set in zshenv!
-# Otherwise NFS (multiple machines, one home dir) messes everything up
-__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__mamba_setup"
-fi
-unset __mamba_setup
-micromamba activate cml_tools
