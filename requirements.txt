@@ -1,0 +1,25 @@
+# pydata basic stack
+numpy
+scipy
+sympy
+pandas
+cython
+matplotlib
+seaborn
+jupyter
+ipython
+scikit-learn
+xgboost
+line_profiler
+
+#pyodbc
+#psycopg2-binary
+pyarrow
+
+# Many nan-related numpy functions much faster than in numpy
+bottleneck
+
+# This one is totally optional: progress bars (for use in scripts / notebooks)
+tqdm
+
+# vim: ft=sh

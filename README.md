@@ -10,3 +10,9 @@ micromamba create --name tools python pip wheel setuptools
 echo 'micromamba activate tools' >> ~/.zshrc
 ```
 This will ensure a default tools environment is created and loaded on login.
+```
+which pip
+pip install -r requirements.txt
+pip install -r torch_requirements.txt
+# etc
+```

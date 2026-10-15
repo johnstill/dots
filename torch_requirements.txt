@@ -1,0 +1,13 @@
+# Pytorch
+# Since --index-url affects the *entire* invocation of `pip install`, these
+# dependencies must be specified here and run separately from the rest.
+#
+# The index URL is for cpu; change 'cpu' to 'cu126' to get CUDA 12.6, etc:
+# --index-url https://download.pytorch.org/whl/cpu
+# --index-url https://download.pytorch.org/whl/cu126
+
+--index-url=https://download.pytorch.org/whl/cpu
+torch
+torchvision
+
+# vim: ft=sh
